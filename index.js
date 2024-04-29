@@ -28,13 +28,27 @@ async function run() {
 
     const craftCollection = client.db("craftDB").collection("craft");
 
-    app.post("/addCraft",async(req,res)=>{
+    // Data post
+    app.post("/craft",async(req,res)=>{
         const newCraft=req.body;
         console.log(newCraft)
         const result= await craftCollection.insertOne(newCraft)
         res.send(result)
     })
 
+    // Data read all
+    app.get("/craft",async(req,res)=>{
+      const cursor=craftCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+
+    // Data read with email
+    app.get("/craft/:email",async(req,res)=>{
+      console.log(req.params.email)
+      const result= await craftCollection.find({email:req.params.email}).toArray();
+      res.send(result)
+    })
 
 
 
@@ -47,7 +61,6 @@ async function run() {
   }
 }
 run().catch(console.dir);
-
 
 
 app.get('/',(req,res)=>{
