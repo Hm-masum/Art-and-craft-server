@@ -50,6 +50,13 @@ async function run() {
       res.send(result)
     })
 
+    // // Data read with subcategories
+    // app.get("/craft/:subcategory",async(req,res)=>{
+    //   console.log(req.params.subcategory)
+    //   const result= await craftCollection.find({subcategory:req.params.subcategory}).toArray();
+    //   res.send(result)
+    // })
+
     // Data read with id
     app.get("/singleCraft/:id",async(req,res)=>{
       const id=req.params.id
