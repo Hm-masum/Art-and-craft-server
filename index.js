@@ -1,7 +1,7 @@
 const express =require('express')
 const cors = require('cors')
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app=express();
 const port=process.env.PORT || 5000;
 
@@ -47,6 +47,45 @@ async function run() {
     app.get("/craft/:email",async(req,res)=>{
       console.log(req.params.email)
       const result= await craftCollection.find({email:req.params.email}).toArray();
+      res.send(result)
+    })
+
+    // Data read with id
+    app.get("/singleCraft/:id",async(req,res)=>{
+      const id=req.params.id
+      const query = {_id: new ObjectId(id)} 
+      const result= await craftCollection.findOne(query)
+      res.send(result)
+    })
+
+    // Data update
+    app.put("/updateCraft/:id",async(req,res)=>{
+      const id=req.params.id;
+      const filter = {_id: new ObjectId(id)} 
+      const options={upsert:true};
+      const updatedCraft = req.body;
+      const data={
+          $set:{
+              item_name:updatedCraft.item_name,
+              subcategory:updatedCraft.subcategory,
+              rating:updatedCraft.rating,
+              price:updatedCraft.price,
+              description:updatedCraft.description,
+              customization:updatedCraft.customization,
+              stockStatus:updatedCraft.stockStatus,
+              processing_time:updatedCraft.processing_time,
+              photo:updatedCraft.photo,
+          }
+      }
+      const result= await craftCollection.updateOne(filter,data,options)
+      res.send(result)
+    })
+
+    // Data Delete
+    app.delete("/delete/:id",async(req,res)=>{
+      const id=req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result=await craftCollection.deleteOne(query);
       res.send(result)
     })
 
