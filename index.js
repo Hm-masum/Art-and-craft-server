@@ -6,7 +6,9 @@ const app=express();
 const port=process.env.PORT || 5000;
 
 // middleware
-app.use(cors())
+app.use(cors({
+  origin:["http://localhost:5173","https://sparkling-dolphin-403728.netlify.app"]
+}))
 app.use(express.json())
 
 
@@ -23,15 +25,12 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
 
     const craftCollection = client.db("craftDB").collection("craft");
 
     // Data post
     app.post("/craft",async(req,res)=>{
         const newCraft=req.body;
-        console.log(newCraft)
         const result= await craftCollection.insertOne(newCraft)
         res.send(result)
     })
@@ -49,13 +48,6 @@ async function run() {
       const result= await craftCollection.find({email:req.params.email}).toArray();
       res.send(result)
     })
-
-    // // Data read with subcategories
-    // app.get("/craft/:subcategory",async(req,res)=>{
-    //   console.log(req.params.subcategory)
-    //   const result= await craftCollection.find({subcategory:req.params.subcategory}).toArray();
-    //   res.send(result)
-    // })
 
     // Data read with id
     app.get("/singleCraft/:id",async(req,res)=>{
@@ -96,14 +88,11 @@ async function run() {
       res.send(result)
     })
 
-
-
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
-    // Ensures that the client will close when you finish/error
-    // await client.close();
+
   }
 }
 run().catch(console.dir);
