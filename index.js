@@ -7,7 +7,7 @@ const port=process.env.PORT || 5000;
 
 // middleware
 app.use(cors({
-  origin:["http://localhost:5173","https://sparkling-dolphin-403728.netlify.app"]
+  origin:["http://localhost:5173","https://craft-verse-55d42.web.app","https://craft-verse-55d42.firebaseapp.com"]
 }))
 app.use(express.json())
 
@@ -44,7 +44,6 @@ async function run() {
 
     // Data read with email
     app.get("/craft/:email",async(req,res)=>{
-      console.log(req.params.email)
       const result= await craftCollection.find({email:req.params.email}).toArray();
       res.send(result)
     })
@@ -88,9 +87,6 @@ async function run() {
       res.send(result)
     })
 
-    // Send a ping to confirm a successful connection
-    // await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
 
   }
